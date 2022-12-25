@@ -16,11 +16,13 @@ class AuthenticationFormData extends Equatable {
   final String? subtitleCTATLink;
   final String primaryCTAText;
   final String? secondaryCTAText;
+  final FormSubmissionMeta formSubmissionMeta;
 
   final List<AuthenticationField> fields;
 
   const AuthenticationFormData({
     required this.title,
+    required this.formSubmissionMeta,
     this.subtitle,
     this.subtitleCTAText,
     this.subtitleCTATLink,
@@ -36,6 +38,7 @@ class AuthenticationFormData extends Equatable {
     String? subtitleCTATLink,
     String? primaryCTAText,
     String? secondaryCTAText,
+    FormSubmissionMeta? formSubmissionMeta,
     List<AuthenticationField>? fields,
   }) {
     return AuthenticationFormData(
@@ -45,6 +48,7 @@ class AuthenticationFormData extends Equatable {
       subtitleCTATLink: subtitleCTATLink ?? this.subtitleCTATLink,
       primaryCTAText: primaryCTAText ?? this.primaryCTAText,
       secondaryCTAText: secondaryCTAText ?? this.secondaryCTAText,
+      formSubmissionMeta: formSubmissionMeta ?? this.formSubmissionMeta,
       fields: fields ?? this.fields,
     );
   }
@@ -56,6 +60,7 @@ class AuthenticationFormData extends Equatable {
         subtitle,
         subtitleCTAText,
         subtitleCTATLink,
+        formSubmissionMeta,
       ];
 
   @override
@@ -70,6 +75,7 @@ class AuthenticationFormData extends Equatable {
       'primaryCTAText': primaryCTAText,
       'secondaryCTAText': secondaryCTAText,
       'fields': fields.map((x) => x.toMap()).toList(),
+      'formSubmissionMeta': formSubmissionMeta.toMap(),
     };
   }
 
@@ -91,6 +97,9 @@ class AuthenticationFormData extends Equatable {
         map['fields'].map<AuthenticationField>(
           (x) => AuthenticationField.fromMap(x as Map<String, dynamic>),
         ),
+      ),
+      formSubmissionMeta: FormSubmissionMeta.fromMap(
+        map['formSubmissionMeta'] as Map<String, dynamic>,
       ),
     );
   }
@@ -250,3 +259,49 @@ class FormRegexValidator extends Equatable {
     );
   }
 }
+
+class FormSubmissionMeta extends Equatable {
+  final FormSubmitRequestType method;
+  final String url;
+  final String? key;
+
+  const FormSubmissionMeta({
+    required this.method,
+    required this.url,
+    this.key,
+  });
+
+  FormSubmissionMeta copyWith({
+    FormSubmitRequestType? method,
+    String? url,
+    String? key,
+  }) {
+    return FormSubmissionMeta(
+      method: method ?? this.method,
+      url: url ?? this.url,
+      key: key ?? this.key,
+    );
+  }
+
+  @override
+  List<Object?> get props => [method, url, key];
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'method': describeEnum(method),
+      'url': url,
+      'key': key,
+    };
+  }
+
+  factory FormSubmissionMeta.fromMap(Map<String, dynamic> map) {
+    return FormSubmissionMeta(
+      method: FormSubmitRequestType.values.lastWhere((element) =>
+          describeEnum(element) == map['method'].toString().toLowerCase()),
+      url: map['url'] as String,
+      key: map['key'] != null ? map['key'] as String : null,
+    );
+  }
+}
+
+enum FormSubmitRequestType { post, patch }

@@ -11,8 +11,9 @@ import 'package:kyahaal/src/features/authentication/presentation/bloc/auth_bloc.
 import 'package:kyahaal/src/features/authentication/presentation/bloc/auth_event.dart';
 
 class Authentication extends StatelessWidget {
-  const Authentication({super.key, required this.formType});
+  Authentication({super.key, required this.formType});
   final AuthenticationFormType formType;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     AuthenticationFormData? formData = context
@@ -44,6 +45,7 @@ class Authentication extends StatelessWidget {
           child: LayoutBuilder(builder: (context, constraints) {
             return SingleChildScrollView(
               child: Form(
+                key: formKey,
                 autovalidateMode: AutovalidateMode.always,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,6 +93,10 @@ class Authentication extends StatelessWidget {
                           autofocus: e.autofocus ?? false,
                           validator: e.validator.validate,
                           key: ValueKey(describeEnum(formType) + e.identifier),
+                          onChanged: (value) => context
+                              .read<AuthenticationBloc>()
+                              .add(UpdateFormValues(
+                                  MapEntry(e.identifier, value))),
                         ),
                         if (e.bottomGutter) const SizedBox(height: 24),
                       ];
@@ -100,7 +106,13 @@ class Authentication extends StatelessWidget {
                       spacing: 24,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            if (formKey.currentState?.validate() ?? false) {
+                              context
+                                  .read<AuthenticationBloc>()
+                                  .add(SubmitForm(formData));
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(constraints.maxWidth * 0.468, 56),
                           ),

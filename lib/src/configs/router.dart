@@ -7,8 +7,10 @@ final _router = GoRouter(
       path: AppRoutes.instance.home,
       builder: (context, state) => const Home(),
       redirect: (context, state) {
+        final token = AppConfig.storage
+            .getString(AppConfig.strings.accessTokenKey, defaultValue: null);
         final authBloc = context.read<AuthenticationBloc>();
-        final isAuthenticated = authBloc.state.isAuthenticated;
+        final isAuthenticated = authBloc.state.isAuthenticated || token != null;
         if (isAuthenticated) return null;
         authBloc.add(GetRemoteConfig());
         return '/auth/login';

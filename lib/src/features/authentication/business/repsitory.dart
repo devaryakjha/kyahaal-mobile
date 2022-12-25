@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:kyahaal/src/features/authentication/business/enums.dart';
+import 'package:kyahaal/src/features/authentication/business/login_response/login_response.dart';
 import 'package:kyahaal/src/features/authentication/business/models.dart';
 import 'package:kyahaal/src/features/authentication/business/service.dart';
+
+import 'state.dart';
 
 class AuthenticationRepository {
   final AuthenticationService _service = AuthenticationService.instance;
@@ -14,5 +19,13 @@ class AuthenticationRepository {
     }));
 
     return Map.fromEntries(mappedResponse);
+  }
+
+  FutureOr<LoginResponse> submitForm(
+    AuthenticationFormData formData,
+    FormValues formValues,
+  ) async {
+    final response = await _service.submitForm(formData, formValues);
+    return LoginResponse.fromMap(response.data);
   }
 }
