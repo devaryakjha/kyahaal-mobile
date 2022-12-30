@@ -10,7 +10,7 @@ class AuthenticationService {
   AuthenticationService._();
   static final AuthenticationService instance = AuthenticationService._();
   final Dio _dio = Dio();
-  final String baseUrl = 'http://localhost:3000';
+  final String baseUrl = const String.fromEnvironment('BASE_URL');
 
   FutureOr<Map<String, dynamic>> getRemoteConfig() async {
     return Map.of((await _dio.get('$baseUrl/config/app')).data);

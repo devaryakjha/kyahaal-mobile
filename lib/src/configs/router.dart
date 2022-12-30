@@ -31,5 +31,6 @@ class AppRoutes {
   AppRoutes._();
   static AppRoutes get instance => AppRoutes._();
   final String auth = '/auth/:form';
+  final String login = '/auth/login';
   final String home = '/home';
 }

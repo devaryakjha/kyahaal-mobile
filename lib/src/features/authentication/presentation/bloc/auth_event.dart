@@ -21,3 +21,5 @@ class SubmitForm extends AuthenticationEvent {
 
   SubmitForm(this.formData);
 }
+
+class Logout extends AuthenticationEvent {}

@@ -19,4 +19,8 @@ class AppStorage {
   String? getString(String key, {String? defaultValue}) {
     return preferenceBox.get(key, defaultValue: defaultValue);
   }
+
+  Future<void> delete(String key) {
+    return preferenceBox.delete(key);
+  }
 }

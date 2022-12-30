@@ -11,6 +11,7 @@ class AuthenticationBloc
     on<GetRemoteConfig>(_getRemoteConfig);
     on<UpdateFormValues>(_updateFormValues);
     on<SubmitForm>(_submitForm);
+    on<Logout>(_logout);
   }
   final AuthenticationRepository repository;
 
@@ -51,5 +52,15 @@ class AuthenticationBloc
       AppConfig.storage
           .addString(AppConfig.strings.accessTokenKey, response.accessToken!);
     }
+  }
+
+  void _logout(
+    Logout event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(state.copyWith(isAuthenticated: false, token: null));
+    await AppConfig.storage.delete(AppConfig.strings.accessTokenKey);
+    AppConfig.router.pushReplacement(AppRoutes.instance.login);
+    add(GetRemoteConfig());
   }
 }
