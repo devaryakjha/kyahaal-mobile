@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'user.dart';
+import '../user.dart';
 
 class LoginResponse extends Equatable {
   final User? user;

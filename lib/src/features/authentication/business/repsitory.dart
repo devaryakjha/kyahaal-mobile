@@ -7,9 +7,11 @@ import 'package:kyahaal/src/features/authentication/business/models.dart';
 import 'package:kyahaal/src/features/authentication/business/service.dart';
 
 import 'state.dart';
+import 'user.dart';
 
 class AuthenticationRepository {
   final AuthenticationService _service = AuthenticationService.instance;
+
   Future<RemoteAuthFormConfig> getRemoteConfig() async {
     final response = await _service.getRemoteConfig();
     final mappedResponse = ((response['form'] as Map).entries.map((e) {
@@ -27,5 +29,13 @@ class AuthenticationRepository {
   ) async {
     final response = await _service.submitForm(formData, formValues);
     return LoginResponse.fromMap(response.data);
+  }
+
+  FutureOr<List<User>> fetchAllUsers() {
+    try {
+      return _service.fetchAllUsers();
+    } catch (e) {
+      return [];
+    }
   }
 }

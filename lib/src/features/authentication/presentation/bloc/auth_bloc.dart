@@ -13,6 +13,7 @@ class AuthenticationBloc
     on<SubmitForm>(_submitForm);
     on<Logout>(_logout);
   }
+
   final AuthenticationRepository repository;
 
   void _init(Initialse event, Emitter<AuthenticationState> emit) {
@@ -28,7 +29,8 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     final response = await repository.getRemoteConfig();
-    emit(state.copyWith(remoteAuthFormConfig: response));
+    final users = await repository.fetchAllUsers();
+    emit(state.copyWith(remoteAuthFormConfig: response, users: users));
   }
 
   void _updateFormValues(
